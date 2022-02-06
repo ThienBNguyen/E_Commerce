@@ -9,15 +9,15 @@ const Cart = ({ cart, onUpdateCartQty, onRemoveFromCart, onEmptyCart }) => {
   const classes = useStyles();
 
   const handleEmptyCart = () => onEmptyCart();
-
+  //jsx function to render when there is no item in the cart
   const renderEmptyCart = () => (
     <Typography variant="subtitle1">You have no items in your shopping cart,
       <Link className={classes.link} to="/">start adding some</Link>!
     </Typography>
   );
-
+  //help with when item being fetch, take too long, show this to user
   if (!cart.line_items) return 'Loading';
-
+  //jsx function render to the user when item in the cart
   const renderCart = () => (
     <>
       <Grid container spacing={3}>
@@ -41,7 +41,8 @@ const Cart = ({ cart, onUpdateCartQty, onRemoveFromCart, onEmptyCart }) => {
     <Container>
       <div className={classes.toolbar} />
       <Typography className={classes.title} variant="h3" gutterBottom>Your Shopping Cart</Typography>
-      { !cart.line_items.length ? renderEmptyCart() : renderCart() }
+      {/* ternary method when there is item or not */}
+      {!cart.line_items.length ? renderEmptyCart() : renderCart()}
     </Container>
   );
 };

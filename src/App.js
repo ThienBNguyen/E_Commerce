@@ -11,35 +11,34 @@ const App = () => {
   const [cart, setCart] = useState({});
   const [order, setOrder] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
-
+  //get all product from the commerce api
   const fetchProducts = async () => {
     const { data } = await commerce.products.list();
-
     setProducts(data);
   };
-
+  //get all products from cart
   const fetchCart = async () => {
     setCart(await commerce.cart.retrieve());
   };
-
+  //function add to cart take productId and quantity pass to cart button
   const handleAddToCart = async (productId, quantity) => {
     const item = await commerce.cart.add(productId, quantity);
 
     setCart(item.cart);
   };
-
+  //update cart quantity
   const handleUpdateCartQty = async (lineItemId, quantity) => {
     const response = await commerce.cart.update(lineItemId, { quantity });
 
     setCart(response.cart);
   };
-
+  //remove cart item with cart id
   const handleRemoveFromCart = async (lineItemId) => {
     const response = await commerce.cart.remove(lineItemId);
 
     setCart(response.cart);
   };
-
+  //empty cart completely
   const handleEmptyCart = async () => {
     const response = await commerce.cart.empty();
 
@@ -63,17 +62,18 @@ const App = () => {
       setErrorMessage(error.data.error.message);
     }
   };
-
+  //start the function method get all product and get current cart
   useEffect(() => {
     fetchProducts();
     fetchCart();
   }, []);
-
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
   return (
+    //handle all the routes of the compoent
     <Router>
       <div style={{ display: 'flex' }}>
+
         <CssBaseline />
         <Navbar totalItems={cart.total_items} handleDrawerToggle={handleDrawerToggle} />
         <Switch>
