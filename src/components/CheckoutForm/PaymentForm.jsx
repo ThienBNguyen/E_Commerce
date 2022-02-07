@@ -4,22 +4,24 @@ import { Elements, CardElement, ElementsConsumer } from '@stripe/react-stripe-js
 import { loadStripe } from '@stripe/stripe-js';
 
 import Review from './Review';
-
+//apply stripe API key
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 const PaymentForm = ({ checkoutToken, nextStep, backStep, shippingData, onCaptureCheckout }) => {
+  // create a function to submit payment
   const handleSubmit = async (event, elements, stripe) => {
     event.preventDefault();
-
+    //check if the payment API is ready and elements is reader
     if (!stripe || !elements) return;
 
     const cardElement = elements.getElement(CardElement);
-
+    //create method call strripe api
     const { error, paymentMethod } = await stripe.createPaymentMethod({ type: 'card', card: cardElement });
 
     if (error) {
       console.log('[error]', error);
     } else {
+      // geting user data 
       const orderData = {
         line_items: checkoutToken.live.line_items,
         customer: { firstname: shippingData.firstName, lastname: shippingData.lastName, email: shippingData.email },
@@ -32,7 +34,7 @@ const PaymentForm = ({ checkoutToken, nextStep, backStep, shippingData, onCaptur
           },
         },
       };
-
+      //call the handleCaptureCheckout method. it runs commerce checkout and refreshcart
       onCaptureCheckout(checkoutToken.id, orderData);
 
       nextStep();
@@ -41,6 +43,7 @@ const PaymentForm = ({ checkoutToken, nextStep, backStep, shippingData, onCaptur
 
   return (
     <>
+      {/* using stripe payment form */}
       <Review checkoutToken={checkoutToken} />
       <Divider />
       <Typography variant="h6" gutterBottom style={{ margin: '20px 0' }}>Payment method</Typography>

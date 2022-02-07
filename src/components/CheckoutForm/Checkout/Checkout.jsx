@@ -21,6 +21,7 @@ const Checkout = ({ cart, onCaptureCheckout, order, error }) => {
 
   useEffect(() => {
     if (cart.id) {
+      //get token
       const generateToken = async () => {
         try {
           const token = await commerce.checkout.generateToken(cart.id, { type: 'cart' });
@@ -34,10 +35,10 @@ const Checkout = ({ cart, onCaptureCheckout, order, error }) => {
       generateToken();
     }
   }, [cart]);
-
+//method use to set the shipping data by next Button in the addressForm 
   const test = (data) => {
     setShippingData(data);
-
+//call the function next step
     nextStep();
   };
 
@@ -52,10 +53,10 @@ const Checkout = ({ cart, onCaptureCheckout, order, error }) => {
       <Button component={Link} variant="outlined" type="button" to="/">Back to home</Button>
     </>
   ) : (
-    <div className={classes.spinner}>
-      <CircularProgress />
-    </div>
-  ));
+      <div className={classes.spinner}>
+        <CircularProgress />
+      </div>
+    ));
 
   if (error) {
     Confirmation = () => (
@@ -66,7 +67,7 @@ const Checkout = ({ cart, onCaptureCheckout, order, error }) => {
       </>
     );
   }
-
+  //address component and payment form component generate depend on the label step
   const Form = () => (activeStep === 0
     ? <AddressForm checkoutToken={checkoutToken} nextStep={nextStep} setShippingData={setShippingData} test={test} />
     : <PaymentForm checkoutToken={checkoutToken} nextStep={nextStep} backStep={backStep} shippingData={shippingData} onCaptureCheckout={onCaptureCheckout} />);
@@ -85,6 +86,7 @@ const Checkout = ({ cart, onCaptureCheckout, order, error }) => {
               </Step>
             ))}
           </Stepper>
+           {/* ternary operator for should be confirmation or checkouttoken */}
           {activeStep === steps.length ? <Confirmation /> : checkoutToken && <Form />}
         </Paper>
       </main>

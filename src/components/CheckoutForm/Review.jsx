@@ -3,12 +3,13 @@ import { Typography, List, ListItem, ListItemText } from '@material-ui/core';
 
 const Review = ({ checkoutToken }) => (
   <>
+    {/* gemerate simple html order summary for the userto confirm payment */}
     <Typography variant="h6" gutterBottom>Order summary</Typography>
     <List disablePadding>
       {checkoutToken.live.line_items.map((product) => (
         <ListItem style={{ padding: '10px 0' }} key={product.name}>
           <ListItemText primary={product.name} secondary={`Quantity: ${product.quantity}`} />
-          <Typography variant="body2">{product.line_total.formatted_with_symbol}</Typography>
+          <Typography variant="body2">s{product.line_total.formatted_with_symbol}</Typography>
         </ListItem>
       ))}
       <ListItem style={{ padding: '10px 0' }}>

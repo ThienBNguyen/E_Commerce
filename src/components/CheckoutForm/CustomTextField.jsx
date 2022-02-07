@@ -5,7 +5,7 @@ import { TextField, Grid } from '@material-ui/core';
 function FormInput({ name, label, required }) {
   const { control } = useFormContext();
   const isError = false;
-
+  //using useForm Context in react hook form for convinence
   return (
     <Grid item xs={12} sm={6}>
       <Controller

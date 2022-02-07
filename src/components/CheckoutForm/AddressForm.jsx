@@ -14,36 +14,37 @@ const AddressForm = ({ checkoutToken, test }) => {
   const [shippingOptions, setShippingOptions] = useState([]);
   const [shippingOption, setShippingOption] = useState('');
   const methods = useForm();
-
+// geting countries from commerce with token
   const fetchShippingCountries = async (checkoutTokenId) => {
     const { countries } = await commerce.services.localeListShippingCountries(checkoutTokenId);
 
     setShippingCountries(countries);
     setShippingCountry(Object.keys(countries)[0]);
   };
-
+//getting subdevision like states of the country
   const fetchSubdivisions = async (countryCode) => {
     const { subdivisions } = await commerce.services.localeListSubdivisions(countryCode);
 
     setShippingSubdivisions(subdivisions);
+    //set the first state in the list
     setShippingSubdivision(Object.keys(subdivisions)[0]);
   };
-
+// get the shipping option fee with token, country and state
   const fetchShippingOptions = async (checkoutTokenId, country, stateProvince = null) => {
     const options = await commerce.checkout.getShippingOptions(checkoutTokenId, { country, region: stateProvince });
 
     setShippingOptions(options);
     setShippingOption(options[0].id);
   };
-
+// call the getting the countries, 
   useEffect(() => {
     fetchShippingCountries(checkoutToken.id);
   }, []);
-
+// call the get the states method depend on the countries method
   useEffect(() => {
     if (shippingCountry) fetchSubdivisions(shippingCountry);
   }, [shippingCountry]);
-
+// call the shipping option when state is available
   useEffect(() => {
     if (shippingSubdivision) fetchShippingOptions(checkoutToken.id, shippingCountry, shippingSubdivision);
   }, [shippingSubdivision]);
@@ -54,6 +55,7 @@ const AddressForm = ({ checkoutToken, test }) => {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit((data) => test({ ...data, shippingCountry, shippingSubdivision, shippingOption }))}>
           <Grid container spacing={3}>
+          {/* using react form to render the input and label convinence */}
             <FormInput required name="firstName" label="First name" />
             <FormInput required name="lastName" label="Last name" />
             <FormInput required name="address1" label="Address line 1" />
@@ -61,6 +63,7 @@ const AddressForm = ({ checkoutToken, test }) => {
             <FormInput required name="city" label="City" />
             <FormInput required name="zip" label="Zip / Postal code" />
             <Grid item xs={12} sm={6}>
+            {/* loop the shippong country and set the select option from the user */}
               <InputLabel>Shipping Country</InputLabel>
               <Select value={shippingCountry} fullWidth onChange={(e) => setShippingCountry(e.target.value)}>
                 {Object.entries(shippingCountries).map(([code, name]) => ({ id: code, label: name })).map((item) => (
@@ -93,7 +96,9 @@ const AddressForm = ({ checkoutToken, test }) => {
           </Grid>
           <br />
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          {/* using react router dom LINK on the back to cart  */}
             <Button component={Link} variant="outlined" to="/cart">Back to Cart</Button>
+            {/* using method handle submit to go next payment detail */}
             <Button type="submit" variant="contained" color="primary">Next</Button>
           </div>
         </form>
